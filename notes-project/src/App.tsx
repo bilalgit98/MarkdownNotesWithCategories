@@ -60,7 +60,7 @@ function App() {
     setNotes((prevNotes) => {
       return prevNotes.map((note) => {
         if (note.id === id) {
-          return { ...data, id: uuidV4(), tagsIds: tags.map((tag) => tag.id) };
+          return { ...note, ...data, tagsIds: tags.map((tag) => tag.id) };
         } else {
           return note;
         }
@@ -68,6 +68,11 @@ function App() {
     });
   }
 
+  function onDeleteNote(id: string) {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id);
+    });
+  }
   function addTag(tag: Tag) {
     setTags((prev) => [...prev, tag]);
   }
@@ -92,7 +97,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
 
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note />} />
+          <Route index element={<Note onDeleteNote={onDeleteNote} />} />
           <Route
             path="edit"
             element={
